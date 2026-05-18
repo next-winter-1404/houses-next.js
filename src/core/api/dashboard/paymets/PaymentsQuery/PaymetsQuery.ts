@@ -1,14 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
-import { GetPayments } from "../Payments";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { CreatePayMents, GetPayments } from "../Payments";
 
 export const usePayments = (filters = {}) => {
   const params = {
-    sort: "amount",
+    sort: "createdAt",
     order: "DESC",
     ...filters,
   };
   return useQuery({
     queryKey: ["payments", params],
     queryFn: GetPayments,
+  });
+};
+
+export const useCreatePayment = () => {
+  return useMutation({
+    mutationFn: (data) => CreatePayMents(data),
   });
 };

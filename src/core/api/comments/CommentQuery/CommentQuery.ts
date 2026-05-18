@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createComment, getAllComment, getCommentById } from "../FastComments";
+import {
+  createComment,
+  getAllComment,
+  getCommentById,
+  updateComment,
+} from "../FastComments";
 import { IData } from "@/core/types/IData";
 
 export const useGetAllComments = (params) => {
@@ -26,6 +31,18 @@ export const useCreateComment = () => {
       queryClient.invalidateQueries({
         queryKey: ["house-comments", variables.house_id],
       });
+    },
+  });
+};
+
+export const useUpdateComment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: any) => updateComment(id, data),
+
+    onSuccess: (id) => {
+      queryClient.invalidateQueries({ queryKey: ["comments", id] });
     },
   });
 };

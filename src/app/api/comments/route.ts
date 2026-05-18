@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-
-const BASE_URL = "http://next.genzuni.website";
+import { BaseUrl } from "@/core/api/BaseUrl";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
     const user_id = searchParams.get("user_id");
     const rating = searchParams.get("rating");
 
-    // فقط پارامترهای دارای مقدار ارسال می‌شوند
     const params = new URLSearchParams({
       page,
       limit,
@@ -35,7 +34,7 @@ export async function GET(req: NextRequest) {
     }
 
     const response = await axios.get(
-      `${BASE_URL}/api/comments?${params.toString()}`,
+      `${BaseUrl}/api/comments?${params.toString()}`,
     );
 
     return NextResponse.json(response.data, { status: 200 });
@@ -44,6 +43,48 @@ export async function GET(req: NextRequest) {
       {
         message: "Failed to fetch comments",
         error: error?.response?.data ?? error.message,
+      },
+      { status: error?.response?.status || 500 },
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    const payload: any = {
+      house_id: Number(body.house_id),
+      title: body.title,
+      caption: body.caption,
+      rating: body.rating ?? 5,
+    };
+
+    if (
+      body.parent_comment_id !== undefined &&
+      body.parent_comment_id !== null &&
+      String(body.parent_comment_id).trim() !== ""
+    ) {
+      payload.parent_comment_id = Number(body.parent_comment_id);
+    }
+
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    const response = await axios.post(`${BaseUrl}/api/comments`, payload, {
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : undefined,
+    });
+
+    return NextResponse.json(response.data, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        message: "Failed to create comment",
+        error: error?.response?.data ?? error?.message,
       },
       { status: error?.response?.status || 500 },
     );

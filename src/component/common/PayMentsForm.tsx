@@ -22,7 +22,7 @@ const PayMentsForm = ({ id }) => {
 
                 {/* form wizard */}
                 <form className='w-[70%] max-sm:w-full flex flex-col justify-center items-center gap-5 ' action="">
-                    <PaymentWizard />
+                    <PaymentWizard bookingData={data} />
                 </form>
 
                 {/* card */}

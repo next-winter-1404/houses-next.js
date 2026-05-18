@@ -5,3 +5,9 @@ export const GetBookings = async () => {
 
   return Response.data;
 };
+
+export const CreateBookings = async (body) => {
+  const Response = await axios.post("/api/bookings", body);
+
+  return Response.data;
+};

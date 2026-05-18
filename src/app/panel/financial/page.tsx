@@ -26,13 +26,15 @@ const staticData = [
 
 const FinancialPage = () => {
     const [filters, setFilters] = useState({
-        sort: "amount",
+        sort: "createdAt",
         order: "DESC",
-        status: "all",
-        type: "all",
+        status: "",
+        type: "",
     });
 
     const { data } = usePayments(filters);
+
+    console.log(data?.payments,'from payments')
 
     const apiPayments = Array.isArray(data?.payments) ? data.payments : [];
 
@@ -57,10 +59,10 @@ const FinancialPage = () => {
 
         return source.filter((item: any) => {
             const statusMatch =
-                filters.status === "all" || item.status === filters.status;
+                filters.status === "" || item.status === filters.status;
 
             const typeMatch =
-                filters.type === "all" || item.type === filters.type;
+                filters.type === "" || item.type === filters.type;
 
             return statusMatch && typeMatch;
         });

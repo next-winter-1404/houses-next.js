@@ -12,8 +12,8 @@ export async function GET(request: Request) {
 
     const page = searchParams.get("page") ?? "1";
     const limit = searchParams.get("limit") ?? "10";
-    const status = searchParams.get("status") ?? "completed";
-    const sort = searchParams.get("sort") ?? "amount";
+    const status = searchParams.get("status") ?? "";
+    const sort = searchParams.get("sort") ?? "createdAt";
     const order = searchParams.get("order") ?? "DESC";
 
     const url = `${BaseUrl}/api/payments?page=${page}&limit=${limit}&status=${status}&sort=${sort}&order=${order}`;
@@ -23,6 +23,29 @@ export async function GET(request: Request) {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    return NextResponse.json(response.data);
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error.response?.data?.message || "Request failed" },
+      { status: error.response?.status || 500 },
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    const body = await request.json();
+
+    const response = await axios.post(`${BaseUrl}/api/payments`, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("TOKEN:", token);
 
     return NextResponse.json(response.data);
   } catch (error: any) {

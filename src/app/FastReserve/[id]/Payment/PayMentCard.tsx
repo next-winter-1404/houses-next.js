@@ -49,7 +49,7 @@ const PayMentCard = ({ value }) => {
                             className="object-contain w-[5%] text-white"
                             unoptimized
                         />
-                        <p className='text-2xl max-sm:text-sm font-medium text-right'>{value?.adress || "خیابان 404 بروکلین کالیفرنیا نیویورک"}</p>
+                        <p className='text-2xl max-sm:text-sm font-medium text-right'>{value?.address || "خیابان 404 بروکلین کالیفرنیا نیویورک"}</p>
                     </div>
                 </div>
 
@@ -71,14 +71,14 @@ const PayMentCard = ({ value }) => {
                         {value?.price && (
                             <>
                                 <span className='flex flex-row-reverse justify-center items-center text-xl max-sm:text-sm text-[#EF4444] line-through ml-2 font-medium'>
-                                    {value?.discounted || "5,500,000"}
+                                    {Number(value?.price).toLocaleString("fa-IR") || "5,500,000"}
                                     <span className='mr-1'>تومان</span>
                                 </span>
                                 <div className='w-[1px] h-4 bg-gray-300 mx-2'></div>
                             </>
                         )}
                         <span className='flex flex-row-reverse justify-center items-center text-xl max-sm:text-xl font-bold text-black gap-1'>
-                            {Number(value?.price).toLocaleString("fa-IR") || "4,500,000"}
+                            {Number(value?.discounted_price).toLocaleString("fa-IR") || "4,500,000"}
                             <span className='text-xl font-normal ml-1 max-sm:text-xl'>ت</span> /
                             <span className='text-xl max-sm:text-sm text-gray-500 font-normal'> هر شب</span>
                         </span>
