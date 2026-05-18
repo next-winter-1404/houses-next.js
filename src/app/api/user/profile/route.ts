@@ -21,8 +21,6 @@ export async function GET() {
     if (!userId) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
-
-    // گرفتن اطلاعات کاربر
     const userResponse = await fetch(
       `http://next.genzuni.website/api/users/${userId}`,
       {
@@ -35,7 +33,6 @@ export async function GET() {
       },
     );
 
-    // گرفتن فعالیت کاربر
     const activityResponse = await fetch(
       `http://next.genzuni.website/api/user-activity/${userId}`,
       {

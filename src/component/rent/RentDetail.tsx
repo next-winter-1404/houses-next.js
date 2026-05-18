@@ -16,6 +16,8 @@ import FacilitiesRent from './FacilitiesRent';
 import Card from '../common/Card';
 import { useHouseById } from '@/core/api/housesDetail/housesQuery/HousesQuery';
 import Appointments from '../common/Appointments';
+import { useAddFavorite } from '@/core/api/favorite/favoritesQuery.ts/favoritesQuery';
+import toast from 'react-hot-toast';
 
 interface IProps {
     id: string;
@@ -23,8 +25,26 @@ interface IProps {
 
 const RentDetail: FC<IProps> = ({ id }) => {
 
-    // const data = slides.find(slide => slide.id === Number(id))
-    const { data, isLoading, error } = useHouseById(id)
+    const { data} = useHouseById(id)
+
+    const { mutate: addFavorite, isPending } = useAddFavorite();
+
+    const handleAddFavorite = () => {
+        if (!id) return;
+
+        addFavorite(
+            { house_id: id },
+            {
+                onSuccess: () => {
+                    toast.success("به علاقه‌مندی‌ها اضافه شد ✅");
+                },
+                onError: () => {
+                    toast.error("خطا در افزودن به علاقه‌مندی‌ها ❌");
+                },
+            }
+        );
+    };
+
 
     return (
         <div className='w-full flex flex-col justify-center items-center gap-10 p-10' dir='rtl'>
@@ -56,6 +76,24 @@ const RentDetail: FC<IProps> = ({ id }) => {
                         <div className=' w-[15%]  flex flex-row-reverse justify-start items-center gap-1'>
                             <Image src={shair} alt='' unoptimized />
                             <Image src={copy} alt='' unoptimized className='' />
+                            <button
+                                onClick={handleAddFavorite}
+                                disabled={isPending}
+                                className='text-gray-500  hover:text-red-500 transition text-2xl'
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="w-12 h-12 text-gray-500 hover:text-red-500 transition"
+                                >
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+        2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.22 2.53h.56
+        C12.09 5.01 13.76 4 15.5 4 
+        18 4 20 6 20 8.5
+        c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>

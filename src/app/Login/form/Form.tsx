@@ -4,6 +4,7 @@ import { useLogin } from '@/core/api/Login/LoginQuery/LoginQuery'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 
 const Form = () => {
     const router = useRouter()
@@ -16,17 +17,15 @@ const Form = () => {
         e.preventDefault()
 
         mutate(
-            {
-                email,
-                password
-            },
+            { email, password },
             {
                 onSuccess: () => {
+                    toast.success("ورود با موفقیت انجام شد")
                     router.push("/")
                     router.refresh()
                 },
                 onError: (err: any) => {
-                    alert(err?.response?.data?.message || "خطایی رخ داده است")
+                    toast.error(err?.response?.data?.message || "خطایی رخ داده است ❌")
                 }
             }
         )
@@ -65,7 +64,10 @@ const Form = () => {
                 >
                     {isPending ? "در حال ورود..." : "ورود به حساب کاربری"}
                 </button>
-                <Link href='/Forget'> رمز خود را فراموش کرده اید؟ </Link>
+
+                <Link href='/Forget' className="text-[#1a3b99] text-sm text-center mt-2">
+                    رمز خود را فراموش کرده‌اید؟
+                </Link>
             </form>
         </div>
     )

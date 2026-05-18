@@ -5,6 +5,7 @@ import "./globals.css";
 import Providers from "./providers";
 import LayoutWrapper from "@/component/LayoutWrapper";
 import { cookies } from "next/headers";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -38,6 +39,7 @@ export default async function RootLayout({
                 <Providers>
                     <LayoutWrapper isLoggedIn={isLoggedIn}>
                         {children}
+                        <Toaster position="top-center" />
                     </LayoutWrapper>
                 </Providers>
             </body>
