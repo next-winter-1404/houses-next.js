@@ -32,9 +32,12 @@ const FinancialPage = () => {
         type: "",
     });
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+
     const { data } = usePayments(filters);
 
-    console.log(data?.payments,'from payments')
 
     const apiPayments = Array.isArray(data?.payments) ? data.payments : [];
 
@@ -44,7 +47,7 @@ const FinancialPage = () => {
             date: p.created_at
                 ? new Date(p.created_at).toLocaleDateString("fa-IR")
                 : "-",
-            trackingId: p.trackingId || p.tracking_id || "-",
+            bookingId: p.bookingId || p.bookingId || "-",
             amount:
                 typeof p.amount === "number"
                     ? p.amount.toLocaleString("fa-IR")
@@ -67,6 +70,15 @@ const FinancialPage = () => {
             return statusMatch && typeMatch;
         });
     }, [mappedApiData, filters]);
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    const paginatedData = useMemo(() => {
+        return filteredData.slice(
+            (currentPage - 1) * itemsPerPage,
+            currentPage * itemsPerPage
+        );
+    }, [filteredData, currentPage]);
 
 
     const [selectedPayment, setSelectedPayment] = useState<any>(null);
@@ -224,13 +236,13 @@ const FinancialPage = () => {
                         </thead>
 
                         <tbody className="divide-y">
-                            {filteredData.length > 0 ? (
-                                filteredData.map((t: any) => (
+                            {paginatedData.length > 0 ? (
+                                paginatedData.map((t: any) => (
                                     <tr key={t.id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.03]">
                                         <td className="p-6 text-xs">{t.date}</td>
 
                                         <td className="p-6 text-center text-sm">
-                                            {t.trackingId}
+                                            {t.bookingId}
                                         </td>
 
                                         <td className="p-6 text-center text-sm font-black">
@@ -283,6 +295,24 @@ const FinancialPage = () => {
                 payment={selectedPayment}
                 onClose={() => setOpenModal(false)}
             />
+
+            {filteredData.length > itemsPerPage && (
+                <div className="flex justify-center gap-2 py-4">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all ${currentPage === page
+                                ? "bg-black text-white shadow-lg"
+                                : "bg-white dark:bg-[#1E1E1E] text-slate-400 hover:bg-slate-50 border border-slate-100"
+                                }`}
+                        >
+                            {page}
+                        </button>
+                    ))}
+                </div>
+            )}
+
 
         </div>
     );

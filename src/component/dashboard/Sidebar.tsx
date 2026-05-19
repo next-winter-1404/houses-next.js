@@ -11,23 +11,35 @@ import {
     PieChart,
     Heart,
     UserRoundSearch,
+    BotMessageSquare,
+    BadgeAlert,
+    BadgeDollarSign,
+    CableCar,
+    Home,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const menuItems = [
-    { title: "داشبورد", icon: <LayoutDashboard size={22} />, href: "/panel/dashboard", roles: ["admin", "seller", "buyer"] },
-    { title: "اطلاعات کاربری", icon: <User size={22} />, href: "/panel/profile", roles: ["admin", "seller", "buyer"] },
+    { title: "داشبورد", icon: <LayoutDashboard size={22} />, href: "/panel/dashboard", roles: ["seller", "buyer"] },
+    { title: "داشبورد", icon: <LayoutDashboard size={22} />, href: "/panel/dashboard/admin", roles: ["admin"] },
+    { title: "اطلاعات کاربری", icon: <User size={22} />, href: "/panel/profile", roles: ["seller", "buyer"] },
+    { title: " کاربران", icon: <User size={22} />, href: "/panel/user", roles: ["admin", "seller"] },
+    { title: " مدریت املاک", icon: <Home size={22} />, href: "/panel/houses", roles: ["admin", "seller"] },
     { title: "مدیریت رزروها", icon: <CalendarDays size={22} />, href: "/panel/booking", roles: ["admin", "seller", "buyer"] },
     { title: "مدیریت مالی", icon: <PieChart size={22} />, href: "/panel/financial", roles: ["admin", "seller", "buyer"] },
     { title: "علاقه‌مندی‌ها", icon: <Heart size={22} />, href: "/panel/favorites", roles: ["buyer"] },
+    { title: "پرداخت ها ", icon: <BadgeDollarSign size={22} />, href: "/panel/payments", roles: ["admin", "buyer"] },
     { title: "اعلان‌ها", icon: <Bell size={22} />, href: "/panel/notifications", roles: ["admin", "seller", "buyer"] },
     { title: "ملاقات ها", icon: <UserRoundSearch size={22} />, href: "/panel/appointments", roles: ["seller", "buyer"] },
+    { title: " چت ها ", icon: <BadgeAlert size={22} />, href: "/panel/Chat-room", roles: ["admin"] },
+    { title: "  کامنت ها ", icon: <BotMessageSquare size={22} />, href: "/panel/comments", roles: ["admin", "seller"] },
+    { title: "  تور ها ", icon: <CableCar size={22} />, href: "/panel/tours", roles: ["admin"] },
 ];
 
 export default function Sidebar() {
     const pathname = usePathname();
     const [role, setRole] = useState<string | null>(null);
-    
+
     useEffect(() => {
         const fetchRole = async () => {
             const res = await fetch("/api/me", { credentials: "include" });
@@ -67,8 +79,8 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${isActive
-                                    ? "bg-primary text-white shadow-md dark:text-black shadow-primary/30"
-                                    : "text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5"
+                                ? "bg-primary text-white shadow-md dark:text-black shadow-primary/30"
+                                : "text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5"
                                 }`}
                         >
                             <span className={`${isActive ? "scale-110" : "group-hover:scale-110"} transition-transform`}>

@@ -23,7 +23,8 @@ const staticBookings = [
 ]
 
 const BookingTable = () => {
-    const { data: booking } = useBookings()
+    const { data } = useBookings()
+    const booking = data?.data
 
     const bookingsData =
         booking && booking.length > 0 ? booking : staticBookings
@@ -32,20 +33,43 @@ const BookingTable = () => {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'تکمیل شده':
+            case 'confirmed':
                 return 'text-emerald-500'
 
-            case 'در انتظار':
+            case 'pending ':
                 return 'text-yellow-500'
 
-            case 'لغو شده':
+            case ' canceled':
                 return 'text-red-500'
 
             default:
                 return 'text-slate-400'
         }
     }
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'confirmed':
+                return 'تکمیل شده'
+            case 'pending':
+                return 'در انتظار'
+            case 'canceled':
+                return 'لغو شده'
+            default:
+                return status
+        }
+    }
 
+
+    const formatDate = (date) => {
+        const d = new Date(date);
+
+        const day = d.toLocaleDateString("fa-IR", { day: "numeric" });
+        const month = d.toLocaleDateString("fa-IR", { month: "long" });
+        const year = d.toLocaleDateString("fa-IR", { year: "numeric" });
+        const time = d.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+
+        return `${day} ${month} - ${year} / ${time}`;
+    };
     return (
         <div className="lg:col-span-2 bg-white dark:bg-[#1E1E1E] rounded-[32px] p-8 border border-gray-100 dark:border-white/5 shadow-sm">
 
@@ -61,7 +85,7 @@ const BookingTable = () => {
                 )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 h-70 overflow-y-scroll">
                 {bookingsData.map((item: any) => (
                     <div
                         key={item.id}
@@ -75,19 +99,19 @@ const BookingTable = () => {
 
                             <div>
                                 <p className="font-bold text-sm dark:text-white">
-                                    {item.villaName}
+                                    {item?.house?.title}
                                 </p>
 
                                 <p className="text-xs text-slate-400">
-                                    {item.date}
+                                    {formatDate(item?.reservedDates[0])}
                                 </p>
                             </div>
                         </div>
 
                         <span
-                            className={`text-xs font-bold ${getStatusColor(item.status)}`}
+                            className={`text-xs font-bold ${getStatusColor(item?.status)}`}
                         >
-                            {item.status}
+                            {getStatusLabel(item?.status)}
                         </span>
                     </div>
                 ))}
